@@ -1,6 +1,8 @@
 ### Custom Template
 
 .idea
+generated
+target
 vince-generator.iml
 vince-generator-basic.iml
 

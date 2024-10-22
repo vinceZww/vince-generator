@@ -1,6 +1,6 @@
-package com.vince;
+package com.vince.maker;
 
-import com.vince.cli.CommandExecutor;
+//import com.vince.maker.cli.CommandExecutor;
 
 public class Main {
     public static void main(String[] args) {
@@ -8,7 +8,7 @@ public class Main {
 //        args=new String[]{"config"};
 //        args=new String[]{"list"};
 
-        CommandExecutor commandExecutor = new CommandExecutor();
-        commandExecutor.doExecute(args);
+//        CommandExecutor commandExecutor = new CommandExecutor();
+//        commandExecutor.doExecute(args);
     }
 }
