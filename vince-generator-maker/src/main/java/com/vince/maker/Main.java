@@ -2,13 +2,14 @@ package com.vince.maker;
 
 //import com.vince.maker.cli.CommandExecutor;
 
-public class Main {
-    public static void main(String[] args) {
-//        args=new String[]{"generate","-l","-a","-o"};
-//        args=new String[]{"config"};
-//        args=new String[]{"list"};
+import com.vince.maker.generator.main.MainGenerator;
+import freemarker.template.TemplateException;
 
-//        CommandExecutor commandExecutor = new CommandExecutor();
-//        commandExecutor.doExecute(args);
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) throws TemplateException, IOException, InterruptedException {
+        MainGenerator generator = new MainGenerator();
+        generator.doGenerate();
     }
 }

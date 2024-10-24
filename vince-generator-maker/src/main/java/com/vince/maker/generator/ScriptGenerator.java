@@ -24,7 +24,7 @@ public class ScriptGenerator {
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
             Files.setPosixFilePermissions(Paths.get(outputPath), permissions);
         } catch (Exception e) {
-            System.out.println("授权异常");
+//            System.out.println("授权异常");
         }
 
         // windows
