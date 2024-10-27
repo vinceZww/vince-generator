@@ -75,7 +75,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.vince.maker.Main</mainClass> <!-- 替换为你的主类的完整类名 -->
+                            <mainClass>com.vince.maker.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

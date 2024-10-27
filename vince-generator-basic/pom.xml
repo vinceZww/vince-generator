@@ -70,7 +70,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.vince.Main</mainClass> <!-- 替换为你的主类的完整类名 -->
+                            <mainClass>com.vince.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
