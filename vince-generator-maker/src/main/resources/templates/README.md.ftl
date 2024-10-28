@@ -12,20 +12,28 @@
 
 执行项目根目录下的脚本文件：
 
-示例命令：
+```
+generator <命令> <选项参数>
+        ```
 
-## 参数说明
+        示例命令：
 
-<#list modelConfig.models as modelInfo>
-    ${modelInfo?index + 1}）${modelInfo.fieldName}
+        ```
+        generator generate <#list modelConfig.models as modelInfo>-${modelInfo.abbr} </#list>
+        ```
 
-    类型：${modelInfo.type}
+        ## 参数说明
 
-    描述：${modelInfo.description}
+        <#list modelConfig.models as modelInfo>
+        ${modelInfo?index + 1}）${modelInfo.fieldName}
 
-    默认值：${modelInfo.defaultValue?c}
+        类型：${modelInfo.type}
 
-    缩写： -${modelInfo.abbr}
+        描述：${modelInfo.description}
+
+        默认值：${modelInfo.defaultValue?c}
+
+        缩写： -${modelInfo.abbr}
 
 
 </#list>

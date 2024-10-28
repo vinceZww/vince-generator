@@ -90,6 +90,10 @@ public abstract class GenerateTemplate {
         outputFilePath = outputBaseJavaPackagePath + "/model/DataModel.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
+        // generator.MainGenerator
+        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/MainGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/MainGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
         // cli.command.ConfigCommand
         inputFilePath = inputResourcePath + File.separator + "templates/java/cli/command/ConfigCommand.java.ftl";
@@ -121,10 +125,7 @@ public abstract class GenerateTemplate {
         outputFilePath = outputBaseJavaPackagePath + "/generator/DynamicGenerator.java";
         DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        // generator.MainGenerator
-        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/MainGenerator.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + "/generator/MainGenerator.java";
-        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
+
 
         // generator.StaticGenerator
         inputFilePath = inputResourcePath + File.separator + "templates/java/generator/StaticGenerator.java.ftl";
@@ -137,9 +138,9 @@ public abstract class GenerateTemplate {
         DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
         //生成README.md 项目介绍文件
-        inputFilePath = inputResourcePath + File.separator + "templates/README.md.ftl";
-        outputFilePath = outputPath + File.separator + "README.md";
-        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
+//        inputFilePath = inputResourcePath + File.separator + "templates/README.md.ftl";
+//        outputFilePath = outputPath + File.separator + "README.md";
+//        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
     }
 
     protected String copySource(Meta meta, String outputPath) {
