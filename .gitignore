@@ -5,6 +5,7 @@ generated
 target
 vince-generator.iml
 vince-generator-basic.iml
+.temp
 
 ### Java template
 # Compiled class file
