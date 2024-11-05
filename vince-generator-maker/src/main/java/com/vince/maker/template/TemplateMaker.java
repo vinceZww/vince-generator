@@ -12,6 +12,7 @@ import com.vince.maker.meta.enums.FileTypeEnum;
 import com.vince.maker.template.enums.FileFilterRangeEnum;
 import com.vince.maker.template.enums.FileFilterRuleEnum;
 import com.vince.maker.template.model.FileFilterConfig;
+import com.vince.maker.template.model.TemplateMakerConfig;
 import com.vince.maker.template.model.TemplateMakerFileConfig;
 import com.vince.maker.template.model.TemplateMakerModelConfig;
 
@@ -24,6 +25,22 @@ import java.util.stream.Collectors;
  * 模板制作工具
  */
 public class TemplateMaker {
+
+    /**
+     * 做做模板
+     * @param templateMakerConfig
+     * @return
+     */
+    public static long makeTemplate(TemplateMakerConfig templateMakerConfig) {
+        Long id = templateMakerConfig.getId();
+        Meta meta = templateMakerConfig.getMeta();
+        String originProjectPath = templateMakerConfig.getOriginProjectPath();
+        TemplateMakerFileConfig templateMakerFileConfig = templateMakerConfig.getFileConfig();
+        TemplateMakerModelConfig templateMakerModelConfig = templateMakerConfig.getModelConfig();
+
+        return makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, id);
+    }
+
 
     /**
      * 制作模板
