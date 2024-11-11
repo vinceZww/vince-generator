@@ -1,6 +1,5 @@
 package com.vince.maker.template.model;
 
-import com.vince.maker.meta.Meta;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -43,5 +42,8 @@ public class TemplateMakerModelConfig {
 
         private String groupName;
 
+        private String type;
+
+        private String description;
     }
 }
