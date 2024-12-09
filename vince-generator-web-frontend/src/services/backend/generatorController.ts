@@ -68,7 +68,7 @@ export async function listGeneratorByPageUsingGet(
   params: API.listGeneratorByPageUsingGETParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponsePageGenerator>('/api/generator/list/page', {
+  return request<API.BaseResponsePageGeneratorVO>('/api/generator/list/page', {
     method: 'GET',
     params: {
       ...params,

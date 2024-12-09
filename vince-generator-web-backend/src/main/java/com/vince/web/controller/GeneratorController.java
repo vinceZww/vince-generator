@@ -1,7 +1,9 @@
 package com.vince.web.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.vince.web.annotation.AuthCheck;
 import com.vince.web.common.BaseResponse;
 import com.vince.web.common.DeleteRequest;
@@ -9,11 +11,13 @@ import com.vince.web.common.ErrorCode;
 import com.vince.web.common.ResultUtils;
 import com.vince.web.constant.CommonConstant;
 import com.vince.web.exception.BusinessException;
+import com.vince.web.meta.Meta;
 import com.vince.web.model.dto.generator.GeneratorAddRequest;
 import com.vince.web.model.dto.generator.GeneratorQueryRequest;
 import com.vince.web.model.dto.generator.GeneratorUpdateRequest;
 import com.vince.web.model.entity.Generator;
 import com.vince.web.model.entity.User;
+import com.vince.web.model.vo.GeneratorVO;
 import com.vince.web.service.GeneratorService;
 import com.vince.web.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 帖子接口
@@ -57,6 +62,7 @@ public class GeneratorController {
         }
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorAddRequest, generator);
+        generator.setTags(JSONUtil.toJsonStr(generatorAddRequest.getTags()));
         // 校验
         generatorService.validGenerator(generator, true);
         User loginUser = userService.getLoginUser(request);
@@ -111,6 +117,7 @@ public class GeneratorController {
         }
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorUpdateRequest, generator);
+        generator.setTags(JSONUtil.toJsonStr(generatorUpdateRequest.getTags()));
         // 参数校验
         generatorService.validGenerator(generator, false);
         User user = userService.getLoginUser(request);
@@ -135,12 +142,14 @@ public class GeneratorController {
      * @return
      */
     @GetMapping("/get")
-    public BaseResponse<Generator> getGeneratorById(long id) {
+    public BaseResponse<GeneratorVO> getGeneratorById(long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Generator generator = generatorService.getById(id);
-        return ResultUtils.success(generator);
+        GeneratorVO generatorVO = new GeneratorVO();
+        BeanUtils.copyProperties(generator, generatorVO);
+        return ResultUtils.success(generatorVO);
     }
 
     /**
@@ -151,14 +160,20 @@ public class GeneratorController {
      */
     @AuthCheck(mustRole = "admin")
     @GetMapping("/list")
-    public BaseResponse<List<Generator>> listGenerator(GeneratorQueryRequest generatorQueryRequest) {
+    public BaseResponse<List<GeneratorVO>> listGenerator(GeneratorQueryRequest generatorQueryRequest) {
         Generator generatorQuery = new Generator();
         if (generatorQueryRequest != null) {
             BeanUtils.copyProperties(generatorQueryRequest, generatorQuery);
         }
         QueryWrapper<Generator> queryWrapper = new QueryWrapper<>(generatorQuery);
         List<Generator> generatorList = generatorService.list(queryWrapper);
-        return ResultUtils.success(generatorList);
+        List<GeneratorVO> generatorVOList = generatorList.stream().map(generator -> {
+            GeneratorVO generatorVO = new GeneratorVO();
+            BeanUtils.copyProperties(generator, generatorVO);
+            generatorVO.setTags(JSONUtil.toList(generator.getTags(), String.class));
+            return generatorVO;
+        }).collect(Collectors.toList());
+        return ResultUtils.success(generatorVOList);
     }
 
     /**
@@ -169,7 +184,7 @@ public class GeneratorController {
      * @return
      */
     @GetMapping("/list/page")
-    public BaseResponse<Page<Generator>> listGeneratorByPage(GeneratorQueryRequest generatorQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<GeneratorVO>> listGeneratorByPage(GeneratorQueryRequest generatorQueryRequest, HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -186,14 +201,35 @@ public class GeneratorController {
         if (size > 50) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        QueryWrapper<Generator> queryWrapper = new QueryWrapper<>(generatorQuery);
+        String searchText = generatorQueryRequest.getSearchText();
+//        QueryWrapper<Generator> queryWrapper = new QueryWrapper<>(generatorQuery); 我在这里简化了
+        QueryWrapper<Generator> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
+        if (StringUtils.isNotBlank(searchText)) {
+            queryWrapper.like("name", searchText).or().like("description", searchText);
+        }
+        String name = generatorQueryRequest.getName();
+        // todo修复拼接异常
+        queryWrapper.like(StringUtils.isNotBlank(name),"name",name);
         queryWrapper.orderBy(StringUtils.isNotBlank(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         Page<Generator> generatorPage = generatorService.page(new Page<>(current, size), queryWrapper);
-        return ResultUtils.success(generatorPage);
+
+        Page<GeneratorVO> generatorVOPage = new PageDTO<>(generatorPage.getCurrent(), generatorPage.getSize(), generatorPage.getTotal());
+        List<GeneratorVO> generatorVOList = generatorPage.getRecords().stream().map(generator -> {
+            GeneratorVO generatorVO = new GeneratorVO();
+            BeanUtils.copyProperties(generator, generatorVO);
+            generatorVO.setTags(JSONUtil.toList(generator.getTags(), String.class));
+            generatorVO.setFileConfig(JSONUtil.toBean(generator.getFileConfig(), Meta.FileConfig.class));
+            generatorVO.setModelConfig(JSONUtil.toBean(generator.getModelConfig(), Meta.ModelConfig.class));
+            return generatorVO;
+        }).collect(Collectors.toList());
+        generatorVOPage.setRecords(generatorVOList);
+
+        return ResultUtils.success(generatorVOPage);
     }
 
     // endregion
+
 
 }

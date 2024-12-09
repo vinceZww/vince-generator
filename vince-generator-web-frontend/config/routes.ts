@@ -1,13 +1,13 @@
 export default [
   {
     path: '/user',
-    layout: false,
+    layout: false, //配置这里就不展示导航栏
     routes: [
       { path: '/user/login', component: './User/Login' },
       { path: '/user/register', component: './User/Register' },
     ],
   },
-  { path: '/welcome', icon: 'smile', component: './Welcome', name: '欢迎页' },
+  { path: '/', icon: 'home', component: './Index', name: '欢迎页' },
   {
     path: '/admin',
     icon: 'crown',
@@ -16,6 +16,7 @@ export default [
     routes: [
       { path: '/admin', redirect: '/admin/user' },
       { icon: 'table', path: '/admin/user', component: './Admin/User', name: '用户管理' },
+      { icon: 'tools', path: '/admin/generator', component: './Admin/Generator', name: '生成器管理' },
     ],
   },
   { path: '/', redirect: '/welcome' },

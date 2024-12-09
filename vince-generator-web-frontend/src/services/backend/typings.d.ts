@@ -29,9 +29,9 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsePageGenerator = {
+  type BaseResponsePageGeneratorVO = {
     code?: number;
-    data?: PageGenerator;
+    data?: PageGeneratorVO;
     message?: string;
   };
 
@@ -76,25 +76,6 @@ declare namespace API {
     type?: string;
   };
 
-  type Generator = {
-    author?: string;
-    basePackage?: string;
-    createTime?: string;
-    description?: string;
-    distPath?: string;
-    fileConfig?: string;
-    id?: number;
-    isDelete?: number;
-    modelConfig?: string;
-    name?: string;
-    picture?: string;
-    status?: number;
-    tags?: string;
-    updateTime?: string;
-    userId?: number;
-    version?: string;
-  };
-
   type GeneratorAddRequest = {
     author?: string;
     basePackage?: string;
@@ -123,6 +104,44 @@ declare namespace API {
     tags?: string[];
     version?: string;
   };
+
+  type GeneratorVO = {
+    author?: string;
+    basePackage?: string;
+    createTime?: string;
+    description?: string;
+    distPath?: string;
+    fileConfig?: FileConfig;
+    id?: number;
+    modelConfig?: ModelConfig;
+    name?: string;
+    picture?: string;
+    status?: number;
+    tags?: string[];
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+    version?: string;
+  };
+
+  // type Generator = {
+  //   author?: string;
+  //   basePackage?: string;
+  //   createTime?: string;
+  //   description?: string;
+  //   distPath?: string;
+  //   fileConfig?: string;
+  //   id?: number;
+  //   isDelete?: number;
+  //   modelConfig?: string;
+  //   name?: string;
+  //   picture?: string;
+  //   status?: number;
+  //   tags?: string;
+  //   updateTime?: string;
+  //   userId?: number;
+  //   version?: string;
+  // };
 
   type getGeneratorByIdUsingGETParams = {
     /** id */
@@ -304,14 +323,14 @@ declare namespace API {
     column?: string;
   };
 
-  type PageGenerator = {
+  type PageGeneratorVO = {
     countId?: string;
     current?: number;
     maxLimit?: number;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
     pages?: number;
-    records?: Generator[];
+    records?: GeneratorVO[];
     searchCount?: boolean;
     size?: number;
     total?: number;
