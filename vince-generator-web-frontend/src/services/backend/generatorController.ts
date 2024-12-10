@@ -7,7 +7,7 @@ export async function addGeneratorUsingPost(
   body: API.GeneratorAddRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponselong>('/api/generator/add', {
+  return request<API.BaseResponseLong_>('/api/generator/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ export async function deleteGeneratorUsingPost(
   body: API.DeleteRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseboolean>('/api/generator/delete', {
+  return request<API.BaseResponseBoolean_>('/api/generator/delete', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,13 +32,28 @@ export async function deleteGeneratorUsingPost(
   });
 }
 
-/** getGeneratorById GET /api/generator/get */
-export async function getGeneratorByIdUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getGeneratorByIdUsingGETParams,
+/** editGenerator POST /api/generator/edit */
+export async function editGeneratorUsingPost(
+  body: API.GeneratorEditRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseGenerator>('/api/generator/get', {
+  return request<API.BaseResponseBoolean_>('/api/generator/edit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** getGeneratorVOById GET /api/generator/get/vo */
+export async function getGeneratorVoByIdUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getGeneratorVOByIdUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseGeneratorVO_>('/api/generator/get/vo', {
     method: 'GET',
     params: {
       ...params,
@@ -47,32 +62,47 @@ export async function getGeneratorByIdUsingGet(
   });
 }
 
-/** listGenerator GET /api/generator/list */
-export async function listGeneratorUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.listGeneratorUsingGETParams,
+/** listGeneratorByPage POST /api/generator/list/page */
+export async function listGeneratorByPageUsingPost(
+  body: API.GeneratorQueryRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseListGenerator>('/api/generator/list', {
-    method: 'GET',
-    params: {
-      ...params,
+  return request<API.BaseResponsePageGenerator_>('/api/generator/list/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }
 
-/** listGeneratorByPage GET /api/generator/list/page */
-export async function listGeneratorByPageUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.listGeneratorByPageUsingGETParams,
+/** listGeneratorVOByPage POST /api/generator/list/page/vo */
+export async function listGeneratorVoByPageUsingPost(
+  body: API.GeneratorQueryRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponsePageGeneratorVO>('/api/generator/list/page', {
-    method: 'GET',
-    params: {
-      ...params,
+  return request<API.BaseResponsePageGeneratorVO_>('/api/generator/list/page/vo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** listMyGeneratorVOByPage POST /api/generator/my/list/page/vo */
+export async function listMyGeneratorVoByPageUsingPost(
+  body: API.GeneratorQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageGeneratorVO_>('/api/generator/my/list/page/vo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }
@@ -82,7 +112,7 @@ export async function updateGeneratorUsingPost(
   body: API.GeneratorUpdateRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseboolean>('/api/generator/update', {
+  return request<API.BaseResponseBoolean_>('/api/generator/update', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

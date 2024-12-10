@@ -1,4 +1,4 @@
-import { listGeneratorByPageUsingGet } from '@/services/backend/generatorController';
+import { listGeneratorVoByPageUsingPost } from '@/services/backend/generatorController';
 import { UserOutlined } from '@ant-design/icons';
 import { PageContainer, ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-components';
 import { Avatar, Card, Flex, Image, Input, List, message, Tabs, Tag, Typography } from 'antd';
@@ -15,12 +15,16 @@ const DEFAULT_PAGE_PARAMS: PageRequest = {
   sortOrder: 'descend',
 };
 
+/**
+ * 主页
+ * @constructor
+ */
 const IndexPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataList, setDataList] = useState<API.GeneratorVO[]>([]);
   const [total, setTotal] = useState<number>(0);
-  //搜索条件
-  const [searchParams, setSearchParams] = useState<API.listGeneratorByPageUsingGETParams>({
+  // 搜索条件
+  const [searchParams, setSearchParams] = useState<API.GeneratorQueryRequest>({
     ...DEFAULT_PAGE_PARAMS,
   });
 
@@ -30,12 +34,11 @@ const IndexPage: React.FC = () => {
   const doSearch = async () => {
     setLoading(true);
     try {
-      const res = await listGeneratorByPageUsingGet(searchParams);
-      // @ts-ignore
+      const res = await listGeneratorVoByPageUsingPost(searchParams);
       setDataList(res.data?.records ?? []);
       setTotal(Number(res.data?.total) ?? 0);
     } catch (error: any) {
-      message.error('获取数据失败。' + error.message);
+      message.error('获取数据失败，' + error.message);
     }
     setLoading(false);
   };
@@ -52,6 +55,7 @@ const IndexPage: React.FC = () => {
     if (!tags) {
       return <></>;
     }
+
     return (
       <div style={{ marginBottom: 8 }}>
         {tags.map((tag) => (
@@ -61,26 +65,18 @@ const IndexPage: React.FC = () => {
     );
   };
 
-  // @ts-ignorey
   return (
     <PageContainer title={<></>}>
       <Flex justify="center">
         <Input.Search
           style={{
             width: '40vw',
-            minWidth: '320',
+            minWidth: 320,
           }}
-          placeholder="请搜索生成器"
+          placeholder="搜索代码生成器"
           allowClear
           enterButton="搜索"
           size="large"
-          // value={searchParams.searchText}
-          // onChange={(e) => {
-          //   setSearchParams({?
-          //     ...searchParams,
-          //     searchText: e.target.value,
-          //   });
-          // }}
           onChange={(e) => {
             searchParams.searchText = e.target.value;
           }}
@@ -112,14 +108,15 @@ const IndexPage: React.FC = () => {
 
       <QueryFilter
         span={12}
-        defaultCollapsed={false}
         labelWidth="auto"
         labelAlign="left"
+        defaultCollapsed={false}
         style={{ padding: '16px 0' }}
-        onFinish={async (value: API.listGeneratorByPageUsingGETParams) => {
+        onFinish={async (values: API.GeneratorQueryRequest) => {
           setSearchParams({
             ...DEFAULT_PAGE_PARAMS,
-            ...value,
+            // @ts-ignore
+            ...values,
             searchText: searchParams.searchText,
           });
         }}
@@ -169,9 +166,9 @@ const IndexPage: React.FC = () => {
               />
               {tagListView(data.tags)}
               <Flex justify="space-between" align="center">
-                <Typography.Paragraph type="secondary" style={{ fontSize: 12 }}>
+                <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                   {moment(data.createTime).fromNow()}
-                </Typography.Paragraph>
+                </Typography.Text>
                 <div>
                   <Avatar src={data.user?.userAvatar ?? <UserOutlined />} />
                 </div>
