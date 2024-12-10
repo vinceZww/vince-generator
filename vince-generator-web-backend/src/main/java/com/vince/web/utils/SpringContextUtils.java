@@ -1,17 +1,16 @@
 package com.vince.web.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * Spring 上下文获取工具
  *
- *
- *
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Component
 public class SpringContextUtils implements ApplicationContextAware {

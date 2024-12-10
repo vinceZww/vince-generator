@@ -1,6 +1,5 @@
 package com.vince.web.model.dto.user;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -8,7 +7,8 @@ import java.io.Serializable;
 /**
  * 用户更新请求
  *
- * @author vince
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Data
 public class UserUpdateRequest implements Serializable {
@@ -23,30 +23,19 @@ public class UserUpdateRequest implements Serializable {
     private String userName;
 
     /**
-     * 账号
-     */
-    private String userAccount;
-
-    /**
      * 用户头像
      */
     private String userAvatar;
 
     /**
-     * 性别
+     * 简介
      */
-    private Integer gender;
+    private String userProfile;
 
     /**
-     * 用户角色: user, admin
+     * 用户角色：user/admin/ban
      */
     private String userRole;
 
-    /**
-     * 密码
-     */
-    private String userPassword;
-
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

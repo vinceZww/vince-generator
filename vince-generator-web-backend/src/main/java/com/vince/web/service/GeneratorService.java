@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 帖子服务
  *
- *
- *
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 public interface GeneratorService extends IService<Generator> {
 
@@ -32,7 +32,6 @@ public interface GeneratorService extends IService<Generator> {
      * @return
      */
     QueryWrapper<Generator> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest);
-
 
     /**
      * 获取帖子封装

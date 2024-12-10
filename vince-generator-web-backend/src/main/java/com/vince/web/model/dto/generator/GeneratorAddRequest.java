@@ -1,6 +1,5 @@
 package com.vince.web.model.dto.generator;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.vince.web.meta.Meta;
 import lombok.Data;
 

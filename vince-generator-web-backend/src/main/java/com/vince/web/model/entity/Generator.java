@@ -1,22 +1,19 @@
 package com.vince.web.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 代码生成器
+ *
  * @TableName generator
  */
-@TableName(value ="generator")
+@TableName(value = "generator")
 @Data
 public class Generator implements Serializable {
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
-
     /**
      * id
      */
@@ -98,6 +95,9 @@ public class Generator implements Serializable {
      */
     @TableLogic
     private Integer isDelete;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 
 
 }

@@ -1,41 +1,46 @@
 package com.vince.web.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vince.web.common.ErrorCode;
+import com.vince.web.constant.CommonConstant;
 import com.vince.web.exception.BusinessException;
 import com.vince.web.mapper.UserMapper;
+import com.vince.web.model.dto.user.UserQueryRequest;
 import com.vince.web.model.entity.User;
+import com.vince.web.model.enums.UserRoleEnum;
+import com.vince.web.model.vo.LoginUserVO;
+import com.vince.web.model.vo.UserVO;
 import com.vince.web.service.UserService;
+import com.vince.web.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.vince.web.constant.UserConstant.ADMIN_ROLE;
 import static com.vince.web.constant.UserConstant.USER_LOGIN_STATE;
 
-
 /**
- * 用户服务实现类
+ * 用户服务实现
  *
- * @author vince
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Service
 @Slf4j
-public class UserServiceImpl extends ServiceImpl<UserMapper, User>
-        implements UserService {
-
-    @Resource
-    private UserMapper userMapper;
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     /**
      * 盐值，混淆密码
      */
-    private static final String SALT = "yupi";
+    public static final String SALT = "yupi";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -57,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             // 账户不能重复
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("userAccount", userAccount);
-            long count = userMapper.selectCount(queryWrapper);
+            long count = this.baseMapper.selectCount(queryWrapper);
             if (count > 0) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
             }
@@ -76,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -93,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
         queryWrapper.eq("userPassword", encryptPassword);
-        User user = userMapper.selectOne(queryWrapper);
+        User user = this.baseMapper.selectOne(queryWrapper);
         // 用户不存在
         if (user == null) {
             log.info("user login failed, userAccount cannot match userPassword");
@@ -101,7 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         // 3. 记录用户的登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return user;
+        return this.getLoginUserVO(user);
     }
 
     /**
@@ -128,6 +133,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     /**
+     * 获取当前登录用户（允许未登录）
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public User getLoginUserPermitNull(HttpServletRequest request) {
+        // 先判断是否已登录
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            return null;
+        }
+        // 从数据库查询（追求性能的话可以注释，直接走缓存）
+        long userId = currentUser.getId();
+        return this.getById(userId);
+    }
+
+    /**
      * 是否为管理员
      *
      * @param request
@@ -138,7 +162,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 仅管理员可查询
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User user = (User) userObj;
-        return user != null && ADMIN_ROLE.equals(user.getUserRole());
+        return isAdmin(user);
+    }
+
+    @Override
+    public boolean isAdmin(User user) {
+        return user != null && UserRoleEnum.ADMIN.getValue().equals(user.getUserRole());
     }
 
     /**
@@ -156,8 +185,52 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return true;
     }
 
+    @Override
+    public LoginUserVO getLoginUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        LoginUserVO loginUserVO = new LoginUserVO();
+        BeanUtils.copyProperties(user, loginUserVO);
+        return loginUserVO;
+    }
+
+    @Override
+    public UserVO getUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return userVO;
+    }
+
+    @Override
+    public List<UserVO> getUserVO(List<User> userList) {
+        if (CollUtil.isEmpty(userList)) {
+            return new ArrayList<>();
+        }
+        return userList.stream().map(this::getUserVO).collect(Collectors.toList());
+    }
+
+    @Override
+    public QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest) {
+        if (userQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        Long id = userQueryRequest.getId();
+        String userName = userQueryRequest.getUserName();
+        String userProfile = userQueryRequest.getUserProfile();
+        String userRole = userQueryRequest.getUserRole();
+        String sortField = userQueryRequest.getSortField();
+        String sortOrder = userQueryRequest.getSortOrder();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(id != null, "id", id);
+        queryWrapper.eq(StringUtils.isNotBlank(userRole), "userRole", userRole);
+        queryWrapper.like(StringUtils.isNotBlank(userProfile), "userProfile", userProfile);
+        queryWrapper.like(StringUtils.isNotBlank(userName), "userName", userName);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+                sortField);
+        return queryWrapper;
+    }
 }
-
-
-
-

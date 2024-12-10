@@ -6,12 +6,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户视图
+ * 用户视图（脱敏）
  *
- * @TableName user
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Data
 public class UserVO implements Serializable {
+
     /**
      * id
      */
@@ -23,22 +25,17 @@ public class UserVO implements Serializable {
     private String userName;
 
     /**
-     * 账号
-     */
-    private String userAccount;
-
-    /**
      * 用户头像
      */
     private String userAvatar;
 
     /**
-     * 性别
+     * 用户简介
      */
-    private Integer gender;
+    private String userProfile;
 
     /**
-     * 用户角色: user, admin
+     * 用户角色：user/admin/ban
      */
     private String userRole;
 
@@ -46,11 +43,6 @@ public class UserVO implements Serializable {
      * 创建时间
      */
     private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 }

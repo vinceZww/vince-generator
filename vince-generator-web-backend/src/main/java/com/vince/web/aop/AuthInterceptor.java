@@ -1,12 +1,11 @@
 package com.vince.web.aop;
 
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.vince.web.annotation.AuthCheck;
 import com.vince.web.common.ErrorCode;
 import com.vince.web.exception.BusinessException;
 import com.vince.web.model.entity.User;
+import com.vince.web.model.enums.UserRoleEnum;
 import com.vince.web.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,15 +16,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 /**
  * 权限校验 AOP
  *
- * @author vince
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Aspect
 @Component
@@ -43,23 +39,29 @@ public class AuthInterceptor {
      */
     @Around("@annotation(authCheck)")
     public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable {
-        List<String> anyRole = Arrays.stream(authCheck.anyRole()).filter(StringUtils::isNotBlank).collect(Collectors.toList());
         String mustRole = authCheck.mustRole();
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         // 当前登录用户
-        User user = userService.getLoginUser(request);
-        // 拥有任意权限即通过
-        if (CollectionUtils.isNotEmpty(anyRole)) {
-            String userRole = user.getUserRole();
-            if (!anyRole.contains(userRole)) {
-                throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-            }
+        User loginUser = userService.getLoginUser(request);
+        UserRoleEnum mustRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
+        // 不需要权限，放行
+        if (mustRoleEnum == null) {
+            return joinPoint.proceed();
         }
-        // 必须有所有权限才通过
-        if (StringUtils.isNotBlank(mustRole)) {
-            String userRole = user.getUserRole();
-            if (!mustRole.equals(userRole)) {
+        // 必须有该权限才通过
+        UserRoleEnum userRoleEnum = UserRoleEnum.getEnumByValue(loginUser.getUserRole());
+        if (userRoleEnum == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        // 如果被封号，直接拒绝
+        if (UserRoleEnum.BAN.equals(userRoleEnum)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        // 必须有管理员权限
+        if (UserRoleEnum.ADMIN.equals(mustRoleEnum)) {
+            // 用户没有管理员权限，拒绝
+            if (!UserRoleEnum.ADMIN.equals(userRoleEnum)) {
                 throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
             }
         }

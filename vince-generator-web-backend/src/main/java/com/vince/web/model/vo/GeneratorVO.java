@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.vince.web.meta.Meta;
 import com.vince.web.model.entity.Generator;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
@@ -107,6 +106,7 @@ public class GeneratorVO implements Serializable {
 
     /**
      * 包装类转换对象
+     *
      * @param generatorVO
      * @return
      */
@@ -128,6 +128,7 @@ public class GeneratorVO implements Serializable {
 
     /**
      * 对象转包装类
+     *
      * @param generator
      * @return
      */
