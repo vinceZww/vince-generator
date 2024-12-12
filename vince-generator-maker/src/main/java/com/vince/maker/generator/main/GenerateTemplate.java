@@ -3,6 +3,7 @@ package com.vince.maker.generator.main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.vince.maker.generator.JarGenerator;
 import com.vince.maker.generator.ScriptGenerator;
 import com.vince.maker.generator.file.DynamicFileGenerator;
@@ -41,9 +42,11 @@ public abstract class GenerateTemplate {
 
         //5.生成精简版的程序
         buildDist(outputPath, sourceCopyDestPath, jarPath, shellOutputFilePath);
+
+
     }
 
-    protected void buildDist(String outputPath, String sourceCopyDestPath,String jarPath,String shellOutputFilePath) {
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String jarPath, String shellOutputFilePath) {
         String distOutputPath = outputPath + "-dist";
         //拷贝jar包
         String targetAbsolutePath = distOutputPath + File.separator + "target";
@@ -52,9 +55,10 @@ public abstract class GenerateTemplate {
         FileUtil.copy(jarAbsolutePath, targetAbsolutePath, true);
         //拷贝脚本文件
         FileUtil.copy(shellOutputFilePath, distOutputPath, true);
-        FileUtil.copy(shellOutputFilePath + ".bat", distOutputPath, true);
+//        FileUtil.copy(shellOutputFilePath + ".bat", distOutputPath, true);
         //拷贝源模板文件
-        FileUtil.copy(sourceCopyDestPath,distOutputPath, true);
+        FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
+        return distOutputPath;
     }
 
     protected String buildScript(String outputPath, String jarPath) {
@@ -150,5 +154,18 @@ public abstract class GenerateTemplate {
         FileUtil.copy(sourceRootPath, sourceCopyDestPath, false);
         return sourceCopyDestPath;
     }
+
+    /**
+     * 制作压缩包
+     *
+     * @param outputPath
+     * @return 压缩包路径
+     */
+    protected String buildZip(String outputPath) {
+        String zipPath = outputPath + ".zip";
+        ZipUtil.zip(outputPath, zipPath);
+        return zipPath;
+    }
+
 
 }

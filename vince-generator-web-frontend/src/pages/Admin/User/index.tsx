@@ -1,6 +1,6 @@
 import CreateModal from '@/pages/Admin/User/components/CreateModal';
 import UpdateModal from '@/pages/Admin/User/components/UpdateModal';
-import {deleteUserUsingPost,  listUserByPageUsingGet} from '@/services/backend/userController';
+import {deleteUserUsingPost,  listUserByPageUsingPost} from '@/services/backend/userController';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -152,12 +152,12 @@ const UserAdminPage: React.FC = () => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
 
-          const { data, code } = await listUserByPageUsingGet({
+          const { data, code } = await listUserByPageUsingPost({
             ...params,
             sortField,
             sortOrder,
             ...filter,
-          } as API.listUserUsingGETParams);
+          } as API.UserQueryRequest);
 
           return {
             success: code === 0,

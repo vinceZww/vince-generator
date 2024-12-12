@@ -8,12 +8,15 @@ import java.util.stream.Collectors;
 
 /**
  * 文件上传业务类型枚举
- *
-*
  */
 public enum FileUploadBizEnum {
 
-    USER_AVATAR("用户头像", "user_avatar");
+    USER_AVATAR("用户头像", "user_avatar"),
+
+    GENERATOR_PICTURE("生成器图片", "generator_picture"),
+
+    GENERATOR_DIST("生成器产物包", "generator_dist"),
+    ;
 
     private final String text;
 
