@@ -11,6 +11,7 @@ public class JarGenerator {
 
         String mavenCommand = winMavenCommand;
 
+        //拆分
         ProcessBuilder processBuilder = new ProcessBuilder(mavenCommand.split(" "));
         processBuilder.directory(new File(projectDir));
         Process process = processBuilder.start();

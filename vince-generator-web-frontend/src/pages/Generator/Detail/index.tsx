@@ -35,8 +35,8 @@ const GeneratorDetailPage: React.FC = () => {
     }
     setLoading(true);
     try {
-      // @ts-ignore
       const res = await getGeneratorVoByIdUsingGet({
+        // @ts-ignore
         id,
       });
       setData(res.data ?? {});
@@ -120,7 +120,9 @@ const GeneratorDetailPage: React.FC = () => {
             <Typography.Paragraph type="secondary">作者：{data.author}</Typography.Paragraph>
             <div style={{ marginBottom: 24 }} />
             <Space size="middle">
-              <Button type="primary">立即使用</Button>
+              <Link to={`/generator/use/${data.id}`}>
+                <Button type="primary">立即使用</Button>
+              </Link>
               {downloadButton}
               {editButton}
             </Space>
