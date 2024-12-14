@@ -423,7 +423,7 @@ public class GeneratorController {
 
         // 清理文件
         CompletableFuture.runAsync(()->{
-//            FileUtil.del(tempDirPath);
+            FileUtil.del(tempDirPath);
         });
 
 
