@@ -41,7 +41,7 @@ public class FileGenerator {
 //        String projectPath = System.getProperty("user.dir") + File.separator + "vince-generator-basic";
 
         String dynamicInputPath = projectPath + File.separator + "vince-generator-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
-        String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yupi/acm/MainTemplate.java";
+        String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/vince/acm/MainTemplate.java";
 
         DynamicFileGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
     }

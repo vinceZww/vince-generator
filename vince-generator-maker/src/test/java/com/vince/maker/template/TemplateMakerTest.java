@@ -30,7 +30,7 @@ public class TemplateMakerTest {
         //指定原始项目路径
         String projectPath = System.getProperty("user.dir");
         String originProjectPath = FileUtil.getAbsolutePath(new File(projectPath).getParentFile()) + File.separator + "vince-generator-demo-projects/springboot-init/";
-        String fileInputPath1 = "src/main/java/com/yupi/project/common";
+        String fileInputPath1 = "src/main/java/com/vince/project/common";
 
         //模型参数配置
         TemplateMakerModelConfig templateMakerModelConfig = new TemplateMakerModelConfig();

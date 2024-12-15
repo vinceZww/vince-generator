@@ -7,7 +7,7 @@
   "fileConfig": {
     "files": [
       {
-        "path": "src/main/java/com/yupi/project/common"
+        "path": "src/main/java/com/vince/project/common"
       }
     ]
   },

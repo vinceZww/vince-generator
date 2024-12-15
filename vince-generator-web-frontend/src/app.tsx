@@ -29,7 +29,7 @@ export async function getInitialState(): Promise<InitialState> {
     // 模拟登录用户
     // const mockUser: API.LoginUserVO = {
     //   userAvatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-    //   userName: 'yupi',
+    //   userName: 'vince',
     //   userRole: 'admin',
     // };
     // initialState.currentUser = mockUser;

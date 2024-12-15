@@ -3,7 +3,7 @@
   "fileConfig": {
     "files": [
       {
-        "path": "src/main/java/com/yupi/project/config/CorsConfig.java",
+        "path": "src/main/java/com/vince/project/config/CorsConfig.java",
         "condition": "needCors"
       }
     ]

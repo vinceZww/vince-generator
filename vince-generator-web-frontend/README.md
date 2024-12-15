@@ -78,5 +78,4 @@
 
 4）测试业务功能
 
-具体万用模板教程：[前端万用模板使用教程 (yuque.com)](https://bcdh.yuque.com/staff-wpxfif/resource/rnv6shm2l57rsx6x) 
 
