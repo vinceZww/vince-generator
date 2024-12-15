@@ -1,6 +1,6 @@
 package com.vince.web.model.dto.generator;
 
-import com.vince.web.meta.Meta;
+import com.vince.maker.meta.Meta;
 import lombok.Data;
 
 import java.io.Serializable;

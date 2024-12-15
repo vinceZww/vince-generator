@@ -2,7 +2,7 @@ package com.vince.web.model.dto.generator;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.vince.web.meta.Meta;
+import com.vince.maker.meta.Meta;
 import lombok.Data;
 
 import java.io.Serializable;
