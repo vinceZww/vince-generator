@@ -8,7 +8,6 @@ import java.io.Serializable;
 /**
  * 制作代码生成器请求
  *
- * @TableName product
  */
 @Data
 public class GeneratorMakeRequest implements Serializable {

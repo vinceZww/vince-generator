@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * 查询请求
  *
- * @author vince
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
